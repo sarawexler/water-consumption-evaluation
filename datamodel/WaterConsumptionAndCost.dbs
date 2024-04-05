@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="WaterConsumptionAndCost" id="LogicalDesign-a1c" database="LogicalDesign" >
+	<schema name="INSTANCE" catalogname="WaterConsumptionAndCost" >
+		<table name="Dim_BillingCycle" prior="Entity" >
+			<column name="BillingCycleID" type="INT" jt="4" mandatory="y" />
+			<column name="RevenueMonth" type="VARCHAR" length="250" jt="12" />
+			<column name="ServiceStartDate" type="DATE" jt="91" />
+			<column name="ServiceEndDate" type="DATE" jt="91" />
+			<column name="NumberOfDays" type="INT" jt="4" />
+			<index name="pk_Dim_BillingCycle" unique="PRIMARY_KEY" >
+				<column name="BillingCycleID" />
+			</index>
+		</table>
+		<table name="Dim_Development" prior="Entity" >
+			<column name="DevelopmentID" type="INT" jt="4" mandatory="y" />
+			<column name="DevelopmentName" type="VARCHAR" length="250" jt="12" />
+			<column name="BuildingNumber" type="VARCHAR" length="250" jt="12" />
+			<column name="ElectronicDataProcessingNumber" type="INT" jt="4" />
+			<column name="RC_Code" type="VARCHAR" length="100" jt="12" />
+			<column name="FundingSource" type="VARCHAR" length="250" jt="12" />
+			<index name="pk_Dim_Development" unique="PRIMARY_KEY" >
+				<column name="DevelopmentID" />
+			</index>
+		</table>
+		<table name="Dim_Location" prior="DimLocation" >
+			<column name="LocationID" type="INT" jt="4" mandatory="y" />
+			<column name="BoroughName" type="VARCHAR" length="250" jt="12" />
+			<column name="Zone" type="VARCHAR" length="250" jt="12" />
+			<column name="Longitude" type="DECIMAL" length="7" decimal="2" jt="3" />
+			<column name="Latitude" type="DECIMAL" length="7" decimal="2" jt="3" />
+			<index name="pk_Dim_Location" unique="PRIMARY_KEY" >
+				<column name="LocationID" />
+			</index>
+		</table>
+		<table name="Dim_Meter" prior="Meter" >
+			<column name="MeterNumber" type="VARCHAR" jt="12" mandatory="y" />
+			<column name="MeterAMR" type="BOOLEAN" jt="-7" />
+			<column name="MeterScope" type="VARCHAR" length="250" jt="12" />
+			<index name="pk_Dim_Meter" unique="PRIMARY_KEY" >
+				<column name="MeterNumber" />
+			</index>
+		</table>
+		<table name="Dim_Vendor" prior="Entity" >
+			<column name="VendorID" type="INT" jt="4" mandatory="y" />
+			<column name="VendorName" type="VARCHAR" length="250" jt="12" />
+			<index name="pk_Dim_Vendor" unique="PRIMARY_KEY" >
+				<column name="VendorID" />
+			</index>
+		</table>
+		<table name="Facts_ConsumerWaterUsage" prior="Fact_ConsumerWaterUsage" >
+			<column name="FactID" type="INT" jt="4" mandatory="y" />
+			<column name="BillingCycleID" type="INT" jt="4" mandatory="y" />
+			<column name="LocationID" type="INT" jt="4" mandatory="y" />
+			<column name="VendorID" type="INT" jt="4" mandatory="y" />
+			<column name="DevelopmentID" type="INT" jt="4" mandatory="y" />
+			<column name="MeterNumber" type="INT" jt="4" mandatory="y" />
+			<column name="ConsumptionVolume" type="DECIMAL" length="7" decimal="2" jt="3" />
+			<column name="WaterConsumptionCost" type="DECIMAL" length="7" decimal="2" jt="3" />
+			<column name="TotalUtilityCost" type="DECIMAL" length="7" decimal="2" jt="3" />
+			<column name="CurrentCharges" type="DECIMAL" length="7" decimal="2" jt="3" />
+			<column name="WaterCharges" type="DECIMAL" length="7" decimal="2" jt="3" />
+			<column name="SewerCharges" type="DECIMAL" length="7" decimal="2" jt="3" />
+			<column name="OtherCharges" type="DECIMAL" length="7" decimal="2" jt="3" />
+			<column name="ElectricityCost" type="DECIMAL" length="7" decimal="2" jt="3" />
+			<column name="GasCost" type="DECIMAL" length="7" decimal="2" jt="3" />
+			<index name="pk_Facts_ConsumerWaterUsage" unique="PRIMARY_KEY" >
+				<column name="FactID" />
+			</index>
+			<fk name="fk_Facts_ConsumerWaterUsage_Dim_BillingCycle" virtual="y" to_schema="WaterConsumptionAndCost.INSTANCE" to_table="Dim_BillingCycle" type="NonIdentifying" mandatory="y" cardinality="OneMore" range_from="0" range_to="0" >
+				<fk_column name="BillingCycleID" pk="BillingCycleID" />
+			</fk>
+			<fk name="fk_Facts_ConsumerWaterUsage_Dim_Location" virtual="y" to_schema="WaterConsumptionAndCost.INSTANCE" to_table="Dim_Location" type="NonIdentifying" mandatory="y" cardinality="OneMore" range_from="0" range_to="0" >
+				<fk_column name="LocationID" pk="LocationID" />
+			</fk>
+			<fk name="fk_Facts_ConsumerWaterUsage_Dim_Vendor" virtual="y" to_schema="WaterConsumptionAndCost.INSTANCE" to_table="Dim_Vendor" type="NonIdentifying" mandatory="y" cardinality="OneMore" range_from="0" range_to="0" >
+				<fk_column name="VendorID" pk="VendorID" />
+			</fk>
+			<fk name="fk_Facts_ConsumerWaterUsage_Dim_Development" virtual="y" to_schema="WaterConsumptionAndCost.INSTANCE" to_table="Dim_Development" type="NonIdentifying" mandatory="y" cardinality="OneMore" range_from="0" range_to="0" >
+				<fk_column name="DevelopmentID" pk="DevelopmentID" />
+			</fk>
+			<fk name="fk_Facts_ConsumerWaterUsage_Dim_Meter" virtual="y" to_schema="WaterConsumptionAndCost.INSTANCE" to_table="Dim_Meter" type="NonIdentifying" mandatory="y" cardinality="OneMore" range_from="0" range_to="0" >
+				<fk_column name="MeterNumber" pk="MeterNumber" />
+			</fk>
+		</table>
+	</schema>
+	<layout name="Default Layout" id="Layout-a6" show_relation="columns" >
+		<entity schema="WaterConsumptionAndCost.INSTANCE" name="Dim_BillingCycle" color="C1D8EE" x="48" y="80" />
+		<entity schema="WaterConsumptionAndCost.INSTANCE" name="Dim_Development" color="C1D8EE" x="560" y="144" />
+		<entity schema="WaterConsumptionAndCost.INSTANCE" name="Dim_Location" color="C1D8EE" x="96" y="368" />
+		<entity schema="WaterConsumptionAndCost.INSTANCE" name="Dim_Meter" color="C1D8EE" x="608" y="416" />
+		<entity schema="WaterConsumptionAndCost.INSTANCE" name="Dim_Vendor" color="C1D8EE" x="352" y="48" />
+		<entity schema="WaterConsumptionAndCost.INSTANCE" name="Facts_ConsumerWaterUsage" color="C1D8EE" x="320" y="208" />
+	</layout>
+</project>
